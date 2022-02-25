@@ -6,6 +6,7 @@ from .forms import CustomUserCreationForm, CustomUserChangeForm
 CustomUser = get_user_model()
 
 
+@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
     form = CustomUserChangeForm
@@ -40,6 +41,3 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
-
-
-admin.site.register(CustomUser, CustomUserAdmin)
