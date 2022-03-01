@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Title -->
-  <title>{% block title %}Ian Rose{% endblock title %}</title>
+  <title>Ian Rose | {% block title %}{% endblock title %}</title>
 
   <!-- Favicons -->
   <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/favicons/apple-touch-icon.png' %}">
@@ -44,7 +44,7 @@
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Blog</a>
+            <a class="nav-link" href="{% url 'post_list' %}">Blog</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">About</a>
