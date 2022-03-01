@@ -16,17 +16,31 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Post',
+            name="Post",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=255)),
-                ('body', models.TextField()),
-                ('meta_description', models.CharField(blank=True, max_length=150)),
-                ('date_created', models.DateTimeField(auto_now_add=True)),
-                ('date_modified', models.DateTimeField(auto_now=True)),
-                ('publish_date', models.DateTimeField(blank=True, null=True)),
-                ('published', models.BooleanField(default=False)),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("body", models.TextField()),
+                ("meta_description", models.CharField(blank=True, max_length=150)),
+                ("date_created", models.DateTimeField(auto_now_add=True)),
+                ("date_modified", models.DateTimeField(auto_now=True)),
+                ("publish_date", models.DateTimeField(blank=True, null=True)),
+                ("published", models.BooleanField(default=False)),
+                (
+                    "author",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
