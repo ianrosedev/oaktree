@@ -1,4 +1,5 @@
 from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 from .models import Post
 
@@ -15,7 +16,7 @@ class PostDetailView(generic.DetailView):
     context_object_name = "post"
 
 
-class PostCreateView(generic.CreateView):
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
     template_name = "blog/post_form.html"
     fields = ("title", "body", "meta_description", "is_published")
@@ -25,13 +26,13 @@ class PostCreateView(generic.CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(generic.UpdateView):
+class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Post
     template_name = "blog/post_form.html"
     fields = ("title", "body", "meta_description", "is_published")
 
 
-class PostDeleteView(generic.DeleteView):
+class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Post
     template_name = "blog/post_delete.html"
     context_object_name = "post"

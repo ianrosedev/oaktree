@@ -1,38 +1,36 @@
 from django.test import TestCase
+from django.contrib.auth import get_user_model
 from django.urls import reverse
-from accounts.models import CustomUser
 from .models import Post
 
 
 class PostListTests(TestCase):
     def setUp(self):
-        user1 = CustomUser.objects.create_user(
-            username="Test User 1", email="test1@example.com", password="testpass123"
+        self.user1 = get_user_model().objects.create_user(
+            username="testuser1", email="test1@example.com", password="testpass123"
         )
-        user2 = CustomUser.objects.create_user(
-            username="Test User 2", email="test2@example.com", password="testpass123"
+        self.user2 = get_user_model().objects.create_user(
+            username="testuser2", email="test2@example.com", password="testpass123"
         )
         Post.objects.create(
-            author=user1,
+            author=self.user1,
             title="Test Title 1",
             body="Test Body 1",
             meta_description="Test Meta 1",
             is_published="True",
         )
         Post.objects.create(
-            author=user2,
+            author=self.user2,
             title="Test Title 2",
             body="Test Body 2",
             meta_description="Test Meta 2",
             is_published="True",
         )
-        url = reverse("post_list")
-        self.response = self.client.get(url)
+        self.url = reverse("post_list")
+        self.response = self.client.get(self.url)
 
-    def test_postlist_status_code(self):
+    def test_postlist(self):
         self.assertEqual(self.response.status_code, 200)
-
-    def test_postlist_template(self):
         self.assertTemplateUsed(self.response, "blog/post_list.html")
 
     def test_postlist_content(self):
@@ -44,77 +42,97 @@ class PostListTests(TestCase):
 
 class PostDetailTests(TestCase):
     def setUp(self):
-        user = CustomUser.objects.create_user(
-            username="Test User", email="test@example.com", password="testpass123"
+        self.user = get_user_model().objects.create_user(
+            username="testuser", email="test@example.com", password="testpass123"
         )
-        post = Post.objects.create(
-            author=user,
+        self.post = Post.objects.create(
+            author=self.user,
             title="Test Title 1",
             body="Test Body 1",
             meta_description="Test Meta 1",
             is_published="True",
         )
-        url = reverse("post", kwargs={"pk": post.id})
-        self.response = self.client.get(url)
+        self.url = reverse("post", kwargs={"pk": self.post.id})
+        self.response = self.client.get(self.url)
 
-    def test_postdetail_status_code(self):
+    def test_postdetail(self):
         self.assertEqual(self.response.status_code, 200)
-
-    def test_postdetail_template(self):
         self.assertTemplateUsed(self.response, "blog/post.html")
 
 
 class PostCreateTests(TestCase):
     def setUp(self):
-        url = reverse("post_create")
-        self.response = self.client.get(url)
+        self.user = get_user_model().objects.create_user(
+            username="testuser", email="test@example.com", password="testpass123"
+        )
+        self.url = reverse("post_create")
 
-    def test_postcreate_status_code(self):
-        self.assertEqual(self.response.status_code, 200)
+    def test_postcreate_for_logged_out_user(self):
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/admin/login/?next=/blog/new/")
 
-    def test_postcreate_template(self):
-        self.assertTemplateUsed(self.response, "blog/post_form.html")
+    def test_postcreate_for_logged_in_user(self):
+        self.client.login(username="testuser", password="testpass123")
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post_form.html")
 
 
 class PostUpdateTests(TestCase):
     def setUp(self):
-        user = CustomUser.objects.create_user(
-            username="Test User", email="test@example.com", password="testpass123"
+        self.user = get_user_model().objects.create_user(
+            username="testuser", email="test@example.com", password="testpass123"
         )
-        post = Post.objects.create(
-            author=user,
+        self.client.login(username="testuser", password="testpass123")
+        self.post = Post.objects.create(
+            author=self.user,
             title="Test Title 1",
             body="Test Body 1",
             meta_description="Test Meta 1",
             is_published="True",
         )
-        url = reverse("post_update", kwargs={"pk": post.id})
-        self.response = self.client.get(url)
+        self.url = reverse("post_update", kwargs={"pk": self.post.id})
 
-    def test_postupdate_status_code(self):
-        self.assertEqual(self.response.status_code, 200)
+    def test_postupdate_for_logged_out_user(self):
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f"/admin/login/?next=/blog/edit/{self.post.id}")
 
-    def test_postupdate_template(self):
-        self.assertTemplateUsed(self.response, "blog/post_form.html")
+    def test_postupdate_for_logged_in_user(self):
+        self.client.login(username="testuser", password="testpass123")
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post_form.html")
 
 
 class PostDeleteTests(TestCase):
     def setUp(self):
-        user = CustomUser.objects.create_user(
-            username="Test User", email="test@example.com", password="testpass123"
+        self.user = get_user_model().objects.create_user(
+            username="testuser", email="test@example.com", password="testpass123"
         )
-        post = Post.objects.create(
-            author=user,
+        self.client.login(username="testuser", password="testpass123")
+        self.post = Post.objects.create(
+            author=self.user,
             title="Test Title 1",
             body="Test Body 1",
             meta_description="Test Meta 1",
             is_published="True",
         )
-        url = reverse("post_delete", kwargs={"pk": post.id})
-        self.response = self.client.get(url)
+        self.url = reverse("post_delete", kwargs={"pk": self.post.id})
 
-    def test_postdelete_status_code(self):
-        self.assertEqual(self.response.status_code, 200)
+    def test_postdelete_for_logged_out_user(self):
+        self.client.logout()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(
+            response, f"/admin/login/?next=/blog/delete/{self.post.id}"
+        )
 
-    def test_postdelete_template(self):
-        self.assertTemplateUsed(self.response, "blog/post_delete.html")
+    def test_postdelete_for_logged_in_user(self):
+        self.client.login(username="testuser", password="testpass123")
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post_delete.html")
