@@ -52,7 +52,7 @@ class PostDetailTests(TestCase):
             meta_description="Test Meta 1",
             is_published="True",
         )
-        self.url = reverse("post", kwargs={"pk": self.post.id})
+        self.url = reverse("post", kwargs={"slug": self.post.slug})
         self.response = self.client.get(self.url)
 
     def test_postdetail(self):
@@ -93,13 +93,15 @@ class PostUpdateTests(TestCase):
             meta_description="Test Meta 1",
             is_published="True",
         )
-        self.url = reverse("post_update", kwargs={"pk": self.post.id})
+        self.url = reverse("post_update", kwargs={"slug": self.post.slug})
 
     def test_postupdate_for_logged_out_user(self):
         self.client.logout()
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, f"/admin/login/?next=/blog/edit/{self.post.id}")
+        self.assertRedirects(
+            response, f"/admin/login/?next=/blog/edit/{self.post.slug}/"
+        )
 
     def test_postupdate_for_logged_in_user(self):
         self.client.login(username="testuser", password="testpass123")
@@ -121,14 +123,14 @@ class PostDeleteTests(TestCase):
             meta_description="Test Meta 1",
             is_published="True",
         )
-        self.url = reverse("post_delete", kwargs={"pk": self.post.id})
+        self.url = reverse("post_delete", kwargs={"slug": self.post.slug})
 
     def test_postdelete_for_logged_out_user(self):
         self.client.logout()
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response, f"/admin/login/?next=/blog/delete/{self.post.id}"
+            response, f"/admin/login/?next=/blog/delete/{self.post.slug}/"
         )
 
     def test_postdelete_for_logged_in_user(self):

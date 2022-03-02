@@ -10,14 +10,14 @@
 <ul>
   {% for post in posts %}
   <li>
-    <a href="{% url 'post' post.pk %}">
+    <a href="{% url 'post' post.slug %}">
       <h2>{{ post.title }}</h2>
     </a>
     <p>{{ post.body }}</p>
     <small>By: {{ post.author }}</small>
   </li>
-  <a href="{% url 'post_update' post.pk%}">EDIT</a>
-  <a href="{% url 'post_delete' post.pk%}">DELETE</a>
+  <a href="{% url 'post_update' post.slug%}">EDIT</a>
+  <a href="{% url 'post_delete' post.slug%}">DELETE</a>
   {% endfor %}
 </ul>
 {% endblock content %}

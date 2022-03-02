@@ -2,6 +2,7 @@ import uuid
 from django.conf import settings
 from django.urls import reverse
 from django.db import models
+from autoslug import AutoSlugField
 
 
 class Post(models.Model):
@@ -14,6 +15,7 @@ class Post(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     publish_date = models.DateTimeField(blank=True, null=True)
     is_published = models.BooleanField(default=False)
+    slug = AutoSlugField(populate_from="title", unique=True)
 
     class Meta:
         ordering = ["-date_created"]
@@ -22,4 +24,4 @@ class Post(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("post", kwargs={"pk": self.pk})
+        return reverse("post", kwargs={"slug": self.slug})
