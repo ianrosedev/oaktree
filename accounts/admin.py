@@ -18,6 +18,8 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     "username",
+                    "first_name",
+                    "last_name",
                     "email",
                     "password",
                     "is_staff",
@@ -32,6 +34,8 @@ class CustomUserAdmin(UserAdmin):
             {
                 "fields": (
                     "username",
+                    "first_name",
+                    "last_name",
                     "email",
                     "password1",
                     "password2",

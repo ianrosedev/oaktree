@@ -14,6 +14,5 @@ class HomePageTests(SimpleTestCase):
     def test_homepage_template(self):
         self.assertTemplateUsed(self.response, "pages/home.html")
 
-    def test_homepage_url_resolves_homepageview(self):
-        view = resolve("/")
-        self.assertEqual(view.func.__name__, views.HomePageView.as_view().__name__)
+    def test_contains_preloader(self):
+        self.assertContains(self.response, '<div class="preloader" id="preloader">')

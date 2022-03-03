@@ -8,18 +8,8 @@
 {% block content %}
 <main class="main min-vh-100" id="top">
   <!-- Preloader -->
-  <div class="preloader" id="preloader">
-    <div class="loader">
-      <div class="line-scale-pulse-out-rapid">
-        <div> </div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div> </div>
-      </div>
-    </div>
-  </div>
-  <!-- End of Preloader -->
+  {% include "preloader.html" %}
+  <!-- End Preloader -->
 
   <section class="py-0" id="promotionHeader">
     <div class="bg-holder overlay overlay-z-index-1"

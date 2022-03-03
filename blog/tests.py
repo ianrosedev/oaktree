@@ -39,6 +39,9 @@ class PostListTests(TestCase):
         self.assertContains(self.response, "Test Body 1")
         self.assertContains(self.response, "Test Body 2")
 
+    def test_contains_preloader(self):
+        self.assertContains(self.response, '<div class="preloader" id="preloader">')
+
 
 class PostDetailTests(TestCase):
     def setUp(self):
@@ -58,6 +61,9 @@ class PostDetailTests(TestCase):
     def test_postdetail(self):
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "blog/post.html")
+
+    def test_contains_preloader(self):
+        self.assertContains(self.response, '<div class="preloader" id="preloader">')
 
 
 class PostCreateTests(TestCase):

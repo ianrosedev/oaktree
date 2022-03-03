@@ -1,23 +1,147 @@
 {% extends "_base.html" %}
+{% load static %}
 
 {% block title %}Blog{% endblock title %}
 
+<!-- Main Content -->
 {% block content %}
-<h1>Post List</h1>
+<main class="main min-vh-100" id="top">
 
-<a href="{% url 'post_create' %}">NEW POST</a>
+  <!-- Preloader -->
+  {% include "preloader.html" %}
+  <!-- End Preloader -->
 
-<ul>
-  {% for post in posts %}
-  <li>
-    <a href="{% url 'post' post.slug %}">
-      <h2>{{ post.title }}</h2>
-    </a>
-    <p>{{ post.body }}</p>
-    <small>By: {{ post.author }}</small>
-  </li>
-  <a href="{% url 'post_update' post.slug%}">EDIT</a>
-  <a href="{% url 'post_delete' post.slug%}">DELETE</a>
-  {% endfor %}
-</ul>
+  <!-- Post Title -->
+  <section class="py-0 bg-dark">
+    <div class="container">
+      <div class="row align-items-end">
+        <div class="col-lg-8 mb-6">
+          <h1 class="post-title text-white display-8 fs-3 fs-md-4" data-zanim-xs='{"delay":0.6}'
+            data-zanim-trigger="scroll">Latest Posts
+          </h1>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Post Title -->
+
+  <!-- Article Body -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+
+          <!-- Post List -->
+          {% for post in posts %}
+          <div class="mb-6 mb-lg-8">
+            <a class="font-sans-serif text-500" href="#!">{{ post.date_created|date }}</a>
+            <a class="text-black" href="{% url 'post' post.slug %}">
+              <h3>{{ post.title }}</h3>
+            </a>
+            <h4 class="fw-normal text-700 mt-3">{{ post.body|truncatechars_html:200 }}</h4>
+            <a class="btn btn-link ps-0" href="{% url 'post' post.slug %}">
+              read more
+              <span class="d-inline-block ms-1">&xrarr;</span>
+            </a>
+
+            <!-- Edit/Delete -->
+            {% if user.is_authenticated %}
+            <br>
+            <a href="{% url 'post_update' post.slug%}" class="btn btn-xs btn-outline-primary">Edit</a>
+            <a href="{% url 'post_delete' post.slug%}" class="btn btn-xs btn-outline-danger">Delete</a>
+            {% endif %}
+            <!-- End Edit/Delete -->
+
+          </div>
+          {% endfor %}
+          <!-- End Post List -->
+
+          <!-- Pagination -->
+          <nav aria-label="Blog Pagination">
+            <ul class="pagination justify-content-center">
+              {% if page_obj.has_previous %}
+              <li class="page-item d-none d-lg-block">
+                <a class="page-link" href="?page=1">First</a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.last_page_number }}" aria-label="Previous">
+                  <span class="fa fa-caret-left" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+              </li>
+              {% endif %}
+
+              {% for i in page_obj.paginator.page_range %}
+              {% if page_obj.number == i %}
+              <li class="page-item">
+                <a class="page-link" href="#">{{ i }}</a>
+              </li>
+              {% else %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+              </li>
+              {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                  <span class="fa fa-caret-right" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </li>
+              <li class="page-item d-none d-lg-block"><a class="page-link"
+                  href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+              </li>
+              {% endif %}
+            </ul>
+          </nav>
+          <!-- End Pagination -->
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4 mt-6 mt-lg-0 ps-xl-7">
+          <div class="row px-2">
+            <div class="col">
+
+              <!-- Search -->
+              <form class="input-iconic">
+                <div class="input-icon">
+                  <button type="submit"><span class="fas fa-search text-500"></span></button>
+                </div>
+                <input class="form-control" type="search" placeholder="Search..." />
+              </form>
+              <!-- End Search -->
+
+              <!-- Tags -->
+              <div class="mt-6">
+                <h4>Tags</h4>
+                <ul class="nav mt-3">
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Creativity</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Ideas</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Travel</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Art</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Psychology</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Life</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Music</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Books</a></li>
+                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Movie</a></li>
+                </ul>
+              </div>
+              <!-- End Tags -->
+
+            </div>
+          </div>
+        </div>
+        <!-- End Sidebar -->
+
+      </div>
+    </div>
+  </section>
+  <!-- End Article Body -->
+
+
+</main>
 {% endblock content %}
+<!-- End Main Content -->
