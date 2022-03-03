@@ -8,7 +8,25 @@ class PostListView(generic.ListView):
     model = Post
     template_name = "blog/post_list.html"
     context_object_name = "posts"
+    extra_context = {"common_tags": Post.tags.most_common()}
     paginate_by = 3
+
+
+class TagListView(generic.ListView):
+    model = Post
+    template_name = "blog/post_list.html"
+    context_object_name = "posts"
+    paginate_by = 3
+
+    def get_queryset(self):
+        return Post.objects.filter(tags__slug=self.kwargs["tag"])
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["current_tag"] = (
+            Post.tags.all().filter(slug__exact=self.kwargs["tag"]).first()
+        )
+        return context
 
 
 class PostDetailView(generic.DetailView):
@@ -20,7 +38,7 @@ class PostDetailView(generic.DetailView):
 class PostCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
     template_name = "blog/post_form.html"
-    fields = ("title", "body", "meta_description", "is_published")
+    fields = ("title", "body", "meta_description", "tags", "is_published")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -30,7 +48,7 @@ class PostCreateView(LoginRequiredMixin, generic.CreateView):
 class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Post
     template_name = "blog/post_form.html"
-    fields = ("title", "body", "meta_description", "is_published")
+    fields = ("title", "body", "meta_description", "tags", "is_published")
 
 
 class PostDeleteView(LoginRequiredMixin, generic.DeleteView):

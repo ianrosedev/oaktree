@@ -1,7 +1,7 @@
 {% extends "_base.html" %}
 {% load static %}
 
-{% block title %}Blog{% endblock title %}
+{% block title %}Blog{% if current_tag %} | {{ current_tag.name }}{% endif %}{% endblock title %}
 
 <!-- Main Content -->
 {% block content %}
@@ -17,7 +17,12 @@
       <div class="row align-items-end">
         <div class="col-lg-8 mb-6">
           <h1 class="post-title text-white display-8 fs-3 fs-md-4" data-zanim-xs='{"delay":0.6}'
-            data-zanim-trigger="scroll">Latest Posts
+            data-zanim-trigger="scroll">
+            {% if current_tag %}
+            {{ current_tag.name }}
+            {% else %}
+            Latest Posts
+            {% endif %}
           </h1>
         </div>
       </div>
@@ -118,15 +123,21 @@
               <div class="mt-6">
                 <h4>Tags</h4>
                 <ul class="nav mt-3">
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Creativity</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Ideas</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Travel</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Art</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Psychology</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Life</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Music</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Books</a></li>
-                  <li><a class="btn btn-xs btn-outline-secondary m-1" href="#!">Movie</a></li>
+                  {% if current_tag %}
+                  <li>
+                    <a class="btn btn-xs btn-outline-secondary m-1" href="{% url 'tag_list' current_tag.slug %}">
+                      {{ current_tag.name.upper }}
+                    </a>
+                  </li>
+                  {% else %}
+                  {% for tag in common_tags %}
+                  <li>
+                    <a class="btn btn-xs btn-outline-secondary m-1" href="{% url 'tag_list' tag.slug %}">
+                      {{ tag }}
+                    </a>
+                  </li>
+                  {% endfor %}
+                  {% endif %}
                 </ul>
               </div>
               <!-- End Tags -->
