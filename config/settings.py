@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Third-party
+    "debug_toolbar",
     "taggit",
     # Local
     "accounts.apps.AccountsConfig",
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -148,3 +150,10 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 # Redirects for when login is reqiured
 LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/blog/"
+
+if DEBUG:
+    # django-debug-toolbar
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]

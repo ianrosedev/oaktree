@@ -3,6 +3,7 @@ black==22.1.0
 click==8.0.4
 Django==4.0.2
 django-autoslug==1.9.8
+django-debug-toolbar==3.2.4
 django-taggit==2.1.0
 mypy-extensions==0.4.3
 pathspec==0.9.0
