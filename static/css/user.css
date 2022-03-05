@@ -11,3 +11,13 @@
 .post-title {
   margin-top: 20px;
 }
+
+.input-iconic {
+  padding-right: 10px;
+}
+
+/* disable links */
+.disabled {
+  pointer-events: none;
+  cursor: default;
+}

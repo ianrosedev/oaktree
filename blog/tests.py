@@ -93,6 +93,126 @@ class TagListTests(TestCase):
         self.assertContains(self.response, '<div class="preloader" id="preloader">')
 
 
+class SearchListTests(TestCase):
+    def setUp(self):
+        self.user1 = get_user_model().objects.create_user(
+            username="testuser1", email="test1@example.com", password="testpass123"
+        )
+        self.user2 = get_user_model().objects.create_user(
+            username="testuser2", email="test2@example.com", password="testpass123"
+        )
+
+    def test_searchlist(self):
+        url = reverse("search_list")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "blog/post_list.html")
+
+    def test_searchlist_content_empty_search(self):
+        Post.objects.create(
+            author=self.user1,
+            title="Test Title 1",
+            body="Test Body 1",
+            meta_description="Test Meta 1",
+            is_published="True",
+        )
+        Post.objects.create(
+            author=self.user2,
+            title="Test Title 2",
+            body="Test Body 2",
+            meta_description="Test Meta 2",
+            is_published="True",
+        )
+
+        url = reverse("search_list")
+        response = self.client.get(url, {"q": ""})
+        self.assertContains(response, "Test Title 1")
+        self.assertContains(response, "Test Title 2")
+        self.assertContains(response, "Test Body 1")
+        self.assertContains(response, "Test Body 2")
+
+    def test_searchlist_content_title_search(self):
+        Post.objects.create(
+            author=self.user1,
+            title="FINDME",
+            body="Test Body 1",
+            meta_description="Test Meta 1",
+            is_published="True",
+        )
+        Post.objects.create(
+            author=self.user2,
+            title="Test Title 2",
+            body="Test Body 2",
+            meta_description="Test Meta 2",
+            is_published="True",
+        )
+
+        search = "findme"
+        url = reverse("search_list")
+        response = self.client.get(url, {"q": search})
+        self.assertContains(response, "FINDME")
+        self.assertNotContains(response, "Test Title 2")
+        self.assertContains(response, "Test Body 1")
+        self.assertNotContains(response, "Test Body 2")
+
+    def test_searchlist_content_tag_search(self):
+        post1 = Post.objects.create(
+            author=self.user1,
+            title="Test Title 1",
+            body="Test Body 1",
+            meta_description="Test Meta 1",
+            is_published="True",
+        )
+        post2 = Post.objects.create(
+            author=self.user2,
+            title="Test Title 2",
+            body="Test Body 2",
+            meta_description="Test Meta 2",
+            is_published="True",
+        )
+
+        # Must add tags after post creation
+        post1.tags.add("Django")
+        post2.tags.add("Python")
+
+        search = "django"
+        url = reverse("search_list")
+        response = self.client.get(url, {"q": search})
+        self.assertContains(response, "Test Title 1")
+        self.assertNotContains(response, "Test Title 2")
+        self.assertContains(response, "Test Body 1")
+        self.assertNotContains(response, "Test Body 2")
+
+    def test_searchlist_content_no_results_search(self):
+        post1 = Post.objects.create(
+            author=self.user1,
+            title="Test Title 1",
+            body="Test Body 1",
+            meta_description="Test Meta 1",
+            is_published="True",
+        )
+        post2 = Post.objects.create(
+            author=self.user2,
+            title="Test Title 2",
+            body="Test Body 2",
+            meta_description="Test Meta 2",
+            is_published="True",
+        )
+
+        # Must add tags after post creation
+        post1.tags.add("Django")
+        post2.tags.add("Python")
+
+        search = "html"
+        url = reverse("search_list")
+        response = self.client.get(url, {"q": search})
+        self.assertNotContains(response, "Test Title 1")
+        self.assertNotContains(response, "Test Title 2")
+        self.assertNotContains(response, "Test Body 1")
+        self.assertNotContains(response, "Test Body 2")
+        self.assertContains(response, f"No results found for: {search}")
+
+
 class PostDetailTests(TestCase):
     def setUp(self):
         self.user = get_user_model().objects.create_user(

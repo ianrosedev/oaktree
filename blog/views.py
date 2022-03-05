@@ -1,6 +1,7 @@
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
+from django.urls import reverse_lazy
+from django.db.models import Q
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Post
 
 
@@ -26,6 +27,28 @@ class TagListView(generic.ListView):
         context["current_tag"] = (
             Post.tags.all().filter(slug__exact=self.kwargs["tag"]).first()
         )
+        return context
+
+
+class SearchListView(generic.ListView):
+    model = Post
+    template_name = "blog/post_list.html"
+    context_object_name = "posts"
+    paginate_by = 3
+
+    def get_queryset(self):
+        query = self.request.GET.get("q")
+
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) | Q(tags__name__iexact=query)
+            ).distinct()
+        else:
+            return Post.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["current_query"] = self.request.GET.get("q")
         return context
 
 
