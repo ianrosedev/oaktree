@@ -1,5 +1,6 @@
 {% extends "_base.html" %}
 {% load static %}
+{% load format_markdown %}
 
 <!-- Title -->
 {% block title %}Blog | {{ post.title }}{% endblock title %}
@@ -45,8 +46,7 @@
               <div class="row">
                 <div class="col">{{ post.date_created|date }}</div>
               </div>
-              <h3 class="mt-4">What selfies mean for avatars in VR and the way we perceive ourselves</h3>
-              <p class="mt-4">{{ post.body|linebreaks }}</p>
+              <div class="mt-4">{{ post.body|format_markdown }}</div>
               <!-- End Post -->
 
               <!-- Social -->

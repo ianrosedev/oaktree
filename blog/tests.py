@@ -1,7 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, SimpleTestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from .models import Post
+from .templatetags.format_markdown import format_markdown
 
 
 class PostListTests(TestCase):
@@ -38,6 +39,10 @@ class PostListTests(TestCase):
         self.assertContains(self.response, "Test Title 2")
         self.assertContains(self.response, "Test Body 1")
         self.assertContains(self.response, "Test Body 2")
+
+    def test_posts_are_published(self):
+        self.assertTrue(self.response.context["posts"][0].is_published)
+        self.assertTrue(self.response.context["posts"][1].is_published)
 
     def test_contains_preloader(self):
         self.assertContains(self.response, '<div class="preloader" id="preloader">')
@@ -88,6 +93,10 @@ class TagListTests(TestCase):
 
     def test_taglist_content_tags(self):
         self.assertContains(self.response, "DJANGO")
+
+    def test_posts_are_published(self):
+        self.assertTrue(self.response.context["posts"][0].is_published)
+        self.assertTrue(self.response.context["posts"][1].is_published)
 
     def test_contains_preloader(self):
         self.assertContains(self.response, '<div class="preloader" id="preloader">')
@@ -212,6 +221,26 @@ class SearchListTests(TestCase):
         self.assertNotContains(response, "Test Body 2")
         self.assertContains(response, f"No results found for: {search}")
 
+    def test_posts_are_published(self):
+        Post.objects.create(
+            author=self.user1,
+            title="Test Title 1",
+            body="Test Body 1",
+            meta_description="Test Meta 1",
+            is_published="True",
+        )
+        Post.objects.create(
+            author=self.user2,
+            title="Test Title 2",
+            body="Test Body 2",
+            meta_description="Test Meta 2",
+            is_published="True",
+        )
+        url = reverse("search_list")
+        response = self.client.get(url, {"q": ""})
+        self.assertTrue(response.context["posts"][0].is_published)
+        self.assertTrue(response.context["posts"][1].is_published)
+
 
 class PostDetailTests(TestCase):
     def setUp(self):
@@ -314,3 +343,11 @@ class PostDeleteTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "blog/post_delete.html")
+
+
+class FormatMarkdownTests(SimpleTestCase):
+    def test_markdown_is_changed_to_html(self):
+        self.assertEquals(format_markdown("# Test String"), "<h1>Test String</h1>")
+        self.assertEquals(
+            format_markdown("*Test String*"), "<p><em>Test String</em></p>"
+        )

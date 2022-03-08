@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from datetime import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,9 +40,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.forms",  # Required for django-markdownx
     # Third-party
-    "debug_toolbar",
     "taggit",
+    "markdownx",
+    "crispy_forms",
+    "crispy_bootstrap5",
+    "debug_toolbar",
     # Local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -150,6 +155,16 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 # Redirects for when login is reqiured
 LOGIN_URL = "/admin/login/"
 LOGIN_REDIRECT_URL = "/blog/"
+
+# django-markdownx
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+MARKDOWNX_MEDIA_PATH = datetime.now().strftime("markdownx/%Y/%m/%d")
+MARKDOWNX_IMAGE_MAX_SIZE = {"size": (500, 500), "quality": 100}
+MARKDOWNX_MARKDOWN_EXTENSIONS = ["fenced_code", "codehilite"]
+
+# django-crispy-forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 if DEBUG:
     # django-debug-toolbar

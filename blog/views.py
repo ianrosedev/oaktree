@@ -12,6 +12,9 @@ class PostListView(generic.ListView):
     extra_context = {"common_tags": Post.tags.most_common()}
     paginate_by = 3
 
+    def get_queryset(self):
+        return Post.objects.filter(is_published=True)
+
 
 class TagListView(generic.ListView):
     model = Post
@@ -20,7 +23,7 @@ class TagListView(generic.ListView):
     paginate_by = 3
 
     def get_queryset(self):
-        return Post.objects.filter(tags__slug=self.kwargs["tag"])
+        return Post.objects.filter(is_published=True, tags__slug=self.kwargs["tag"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -40,11 +43,13 @@ class SearchListView(generic.ListView):
         query = self.request.GET.get("q")
 
         if query:
-            return Post.objects.filter(
-                Q(title__icontains=query) | Q(tags__name__iexact=query)
-            ).distinct()
+            return (
+                Post.objects.filter(is_published=True)
+                .filter(Q(title__icontains=query) | Q(tags__name__iexact=query))
+                .distinct()
+            )
         else:
-            return Post.objects.all()
+            return Post.objects.filter(is_published=True)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -1,5 +1,34 @@
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Submit">
-</form>
+{% extends "_base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Title -->
+{% block title %}
+Blog
+{% if post.title %}
+| {{ post.title }}
+{% else %}
+| New
+{% endif %}
+{% endblock title %}
+
+<!-- Main Content -->
+{% block content %}
+<main class="main min-vh-100" id="top">
+
+  <!-- Preloader -->
+  {% include "preloader.html" %}
+  <!-- End Preloader -->
+
+
+  <form method="post" class="p-6">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Save" class="btn btn-outline-success">
+  </form>
+
+  {{ form.media }}
+
+</main>
+{% endblock content %}
+<!-- End of Main Content -->
