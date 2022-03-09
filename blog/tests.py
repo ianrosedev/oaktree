@@ -261,6 +261,33 @@ class PostDetailTests(TestCase):
         self.assertEqual(self.response.status_code, 200)
         self.assertTemplateUsed(self.response, "blog/post.html")
 
+    def test_unpublished_posts_for_logged_out_user(self):
+        unpublished_post = Post.objects.create(
+            author=self.user,
+            title="Test Title Unpublished",
+            body="Test Body Unpublished",
+            meta_description="Test Meta Unpublished",
+            is_published="False",
+        )
+        self.url = reverse("post", kwargs={"slug": unpublished_post.slug})
+        self.client.logout()
+        self.response = self.client.get(self.url)
+        self.assertContains(self.response, "Permission Denied")
+
+    def test_unpublished_posts_for_logged_in_user(self):
+        unpublished_post = Post.objects.create(
+            author=self.user,
+            title="Test Title Unpublished",
+            body="Test Body Unpublished",
+            meta_description="Test Meta Unpublished",
+            is_published="False",
+        )
+        self.url = reverse("post", kwargs={"slug": unpublished_post.slug})
+        self.client.login(username="testuser", password="testpass123")
+        self.response = self.client.get(self.url)
+        self.assertContains(self.response, "Test Title Unpublished")
+        self.assertContains(self.response, "Test Body Unpublished")
+
     def test_contains_preloader(self):
         self.assertContains(self.response, '<div class="preloader" id="preloader">')
 

@@ -7,6 +7,7 @@
 
 <!-- Main Content -->
 {% block content %}
+{% if post.is_published or user.is_authenticated %}
 <main class="main min-vh-100" id="top">
 
   <!-- Preloader -->
@@ -114,5 +115,10 @@
   <!-- End Article Body -->
 
 </main>
+{% else %}
+<div class="vh-100 d-flex justify-content-center align-items-center">
+  <h3>Permission Denied</h3>
+</div>
+{% endif %}
 {% endblock content %}
 <!-- End of Main Content -->
