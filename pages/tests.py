@@ -1,9 +1,8 @@
-from django.test import SimpleTestCase
-from django.urls import reverse, resolve
-from . import views
+from django.test import TestCase
+from django.urls import reverse
 
 
-class HomePageTests(SimpleTestCase):
+class HomePageTests(TestCase):
     def setUp(self):
         url = reverse("home")
         self.response = self.client.get(url)
