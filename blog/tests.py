@@ -288,6 +288,30 @@ class PostDetailTests(TestCase):
         self.assertContains(self.response, "Test Title Unpublished")
         self.assertContains(self.response, "Test Body Unpublished")
 
+    def test_post_author_is_not_current_user(self):
+        """Fix issue where logged-in user is shown instead of post author."""
+
+        author = get_user_model().objects.create_user(
+            username="author",
+            email="author@example.com",
+            password="testpass123",
+            first_name="TestAuthor",
+            last_name="McAuthor",
+            short_bio="TestAuthor Bio",
+        )
+        post = Post.objects.create(
+            author=author,
+            title="Test Author Title",
+            body="Test Author Body",
+            meta_description="Test Author Meta",
+            is_published="True",
+        )
+        url = reverse("post", kwargs={"slug": post.slug})
+        response = self.client.get(url)
+        self.client.logout()
+        self.assertContains(response, "TestAuthor McAuthor")
+        self.assertContains(response, "TestAuthor Bio")
+
     def test_contains_preloader(self):
         self.assertContains(self.response, '<div class="preloader" id="preloader">')
 

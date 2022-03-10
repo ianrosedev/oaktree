@@ -73,8 +73,8 @@
                     <img class="rounded-circle img-fluid" src="{% static 'img/team/3.jpg' %}" alt="" />
                   </div>
                   <div class=" col-sm">
-                    <h5>{{user.first_name}} {{user.last_name}}</h5>
-                    <p class="font-sans-serif">{{ user.short_bio }}</p>
+                    <h5>{{post.author.first_name}} {{post.author.last_name}}</h5>
+                    <p class="font-sans-serif">{{ post.author.short_bio }}</p>
                     <a class="font-sans-serif fs--1 fw-black text-black" href="#!">Follow @ twitter</a>
                   </div>
                 </div>
