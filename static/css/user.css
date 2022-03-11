@@ -27,7 +27,7 @@
   padding-left: 0;
 }
 
-textarea {
+.blog-form-textarea > textarea {
   height: 100vh;
 }
 
