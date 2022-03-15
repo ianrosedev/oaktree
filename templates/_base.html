@@ -19,6 +19,8 @@
   <link rel="manifest" href="{% static 'img/favicons/manifest.json' %}">
   <meta name="msapplication-TileImage" content="{% static 'img/favicons/mstile-150x150.png' %}">
   <meta name="theme-color" content="#ffffff">
+  <meta name="description"
+    content="{% block meta_description %}Ian Rose meta description{% endblock meta_description %}">
 
   <!-- Stylesheets -->
   <link href="{% static 'vendors/loaders.css/loaders.min.css' %}" rel="stylesheet" type="text/css">

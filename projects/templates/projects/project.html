@@ -2,6 +2,9 @@
 {% load static %}
 {% load format_markdown %}
 
+<!-- Meta Description -->
+{% block meta_description %}{{ project.meta_description }}{% endblock meta_description %}
+
 <!-- Title -->
 {% block title %}Projects | {{ project.title }}{% endblock title %}
 
