@@ -110,19 +110,8 @@
   <script src="{% static 'vendors/gsap/customEase.js' %}"></script>
   <script src="{% static 'vendors/gsap/drawSVGPlugin.js' %}"></script>
   <script src="{% static 'js/theme.min.js' %}"></script>
+  <script src="{% static 'js/user.js' %}"></script>
 
-  <!-- Addional JavaScript -->
-  <script>
-    // Add bootstrap to images created with markdown
-    const images = document.getElementsByTagName('img');
-
-    for (const image of images) {
-      // Ignore items with 'no-styling' class
-      if (image.classList[0] !== 'no-styling') {
-        image.className += 'rounded img-fluid';
-      }
-    }
-  </script>
 </body>
 
 </html>
