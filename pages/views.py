@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views import generic
+from projects.models import Project
 from blog.models import Post
 from .forms import ContactForm
 
@@ -7,6 +8,16 @@ from .forms import ContactForm
 class HomePageView(generic.TemplateView):
     template_name = "pages/home.html"
     extra_context = {"posts": Post.objects.filter(is_published=True)[:4]}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["projects"] = Project.objects.filter(is_published=True).only(
+            "main_image", "title", "lead", "slug"
+        )[:3]
+        context["posts"] = Post.objects.filter(is_published=True).only(
+            "title", "body", "date_created", "slug"
+        )[:4]
+        return context
 
 
 class ContactPageView(generic.FormView):

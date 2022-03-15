@@ -1,0 +1,143 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load format_markdown %}
+
+<!-- Title -->
+{% block title %}Projects | {{ project.title }}{% endblock title %}
+
+<!-- Main Content -->
+{% block content %}
+{% if project.is_published or user.is_authenticated %}
+<main class="main min-vh-100" id="top">
+
+  <!-- Preloader -->
+  {% include "preloader.html" %}
+  <!-- End Preloader -->
+
+  <!-- Article Body -->
+  <section class="py-0">
+    <div class="container px-lg-0">
+      <div class="col-lg-12 py-6 py-lg-4 py-xl-6">
+        <div class="row h-100 justify-content-center">
+          <div class="col-lg-12">
+
+            <!-- Edit/Delete -->
+            {% if user.is_authenticated %}
+            <a href="{% url 'project_update' project.slug %}" class="btn btn-xs btn-outline-primary">Edit</a>
+            <a href="{% url 'project_delete' project.slug %}" class="btn btn-xs btn-outline-danger">Delete</a>
+            {% endif %}
+            <!-- End Edit/Delete -->
+
+            <div data-zanim-timeline='{"delay":0.4}' data-zanim-trigger="scroll">
+
+              <!-- Home Link -->
+              <div class="overflow-hidden">
+                <div data-zanim-xs='{"delay":0.1}'>
+                  <a class="btn btn-link ps-0 text-black shadow-none" href="{% url 'home' %}#projects">
+                    <span class="fas fa-chevron-left" data-fa-transform="down-1"></span><span
+                      class="ps-2 fw-bold">Home</span>
+                  </a>
+                </div>
+              </div>
+              <!-- End Home Link -->
+
+              <!-- Title -->
+              <div class="overflow-hidden">
+                <h2 data-zanim-xs='{"delay":0.2}'>{{ project.title }}</h2>
+              </div>
+              <!-- End Title -->
+
+              <!-- Lead -->
+              <div class="row mt-4">
+                <div class="col-xl-9">
+                  <div class="overflow-hidden">
+                    <p class="lead font-sans-serif fw-normal text-600" data-zanim-xs='{"delay":0.3}'>
+                      {{ project.lead }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <!-- End Lead -->
+
+            </div>
+
+            <!-- Main Image -->
+            <div class="row my-6">
+              <div class="col-sm-6" data-zanim-xs='{"delay":0.2,"animation":"zoom-in"}' data-zanim-trigger="scroll">
+                {{ project.main_image|format_markdown }}
+              </div>
+            </div>
+            <!-- End Main Image -->
+
+            <div class="row">
+
+              <!-- Project Content -->
+              <div class="col-12 col-xl-8 pe-xl-6" data-zanim-timeline='{"delay":0.5}' data-zanim-trigger="scroll">
+                <div class="overflow-hidden" data-zanim-xs='{"delay":0.1}'>
+                  {{ project.body|format_markdown }}
+                </div>
+              </div>
+              <!-- End Project Content -->
+
+              <!-- Sidebar -->
+              <div class="col" data-zanim-timeline='{"delay":0.6}' data-zanim-trigger="scroll">
+
+                <!-- Project Link -->
+                <div class="overflow-hidden">
+                  <h6 class="text-uppercase ls" data-zanim-xs='{"delay":0.1}'>Project link</h6>
+                </div>
+                <div class="overflow-hidden">
+                  <div data-zanim-xs='{"delay":0.2}'>
+                    {% if project.web_link %}
+                    <a class="text-600 font-sans-serif" href="{{ project.web_link }}">
+                      {{project.web_link }}
+                    </a>
+                    {% else %}
+                    <p class="text-600 font-sans-serif">None at this time</p>
+                    {% endif %}
+                  </div>
+                </div>
+                <!-- End Project Link -->
+
+                <!-- GitHub Link -->
+                <div class="overflow-hidden">
+                  <h6 class="mt-4 text-uppercase ls" data-zanim-xs='{"delay":0.1}'>GitHub</h6>
+                </div>
+                <div class="overflow-hidden">
+                  <div data-zanim-xs='{"delay":0.2}'>
+                    {% if project.github_link %}
+                    <a class="btn btn-dark btn-sm me-2" href="{{ project.github_link }}"
+                      aria-label="{{project.title}} GitHub">
+                      <span class="fab fa-github" data-fa-transform="grow-6"></span>
+                    </a>
+                    {% else %}
+                    <p class="text-600 font-sans-serif">None at this time</p>
+                    {% endif %}
+                  </div>
+                </div>
+                <!-- End GitHub Link -->
+
+              </div>
+              <!-- End Sidebar -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of .container-->
+
+  </section>
+  <!-- End Article Body -->
+
+</main>
+
+<!-- Not Published and Not Logged In  -->
+{% else %}
+<div class="vh-100 d-flex justify-content-center align-items-center">
+  <h3>Permission Denied</h3>
+</div>
+{% endif %}
+
+{% endblock content %}
+<!-- End Main Content -->

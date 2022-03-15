@@ -1,0 +1,5 @@
+<form method="post">
+  {% csrf_token %}
+  <h2>Delete {{ project.title }}?</h2>
+  <input type="submit" value="DELETE">
+</form>

@@ -26,7 +26,7 @@
       </div>
       <div class="row pt-6">
         <div class="col-md-6 col-lg mt-6 mt-md-0 pe-md-6">
-          <img src="{% static 'img/icons/icon-coding.svg' %}" alt="coding" height="70" />
+          <img class="no-styling" src="{% static 'img/icons/icon-coding.svg' %}" alt="coding" height="70" />
           <h3 class="mt-4 mb-2">Content Opportunities</h3>
           <p class="text-justify">A unique opportunity to pair your brand with ours. Branded content opportunities
             with Sparrow studios offer your fans legendary experiences thorough candid performances, one-of-a-kind
@@ -45,7 +45,7 @@
           </ul>
         </div>
         <div class="col-md-6 col-lg mt-6 mt-lg-0 pe-md-6">
-          <img src="{% static 'img/icons/icon-startup.svg' %}" alt="rocket" height="70" />
+          <img class="no-styling" src="{% static 'img/icons/icon-startup.svg' %}" alt="rocket" height="70" />
           <h3 class="mt-4 mb-2">Experiential</h3>
           <p class="text-justify">Events at Sparrow studios offer a truly unique, exclusive space with legendary
             appeal. Providing premiere event spaces and amenities for hosting formal parties, VIP red carpet events or
@@ -63,7 +63,7 @@
           </ul>
         </div>
         <div class="col-md-6 col-lg pe-md-6">
-          <img src="{% static 'img/icons/icon-teamwork.svg' %}" alt="teamwork" height="70" />
+          <img class="no-styling" src="{% static 'img/icons/icon-teamwork.svg' %}" alt="teamwork" height="70" />
           <h3 class="mt-4 mb-2">Teamwork</h3>
           <p class="text-justify">We will collaborate with you in producing media-facing content, copy, interviews,
             trade show appearances and advertising. We facilitate exclusive access to our studios and unique
@@ -85,43 +85,31 @@
   <!-- End About -->
 
   <!-- Projects -->
-  <section class="bg-light">
+  <section class="bg-light" id="projects">
     <div class="container">
       <div class="row">
         <div class="col-12">
           <h2 class="mb-7 text-decoration-underline">Projects</h2>
         </div>
-        <div class="col-md-6 col-lg"><img class="rounded img-fluid" src="{% static 'img/studio-01.jpg' %}" alt=""
-            data-zanim-xs='{"delay":0.1,"animation":"zoom-in"}' data-zanim-trigger="scroll" />
+
+        {% for project in projects %}
+        <div class="col-md-6 col-lg">
+          <a href="{% url 'project' project.slug %}">
+            {{ project.main_image|format_markdown }}
+          </a>
           <div class="overflow-hidden" data-zanim-timeline="{}" data-zanim-trigger="scroll">
-            <h4 class="mt-4 mb-2" data-zanim-xs='{"delay":0.2,"animation":"slide-right"}'>studio services</h4>
-            <p data-zanim-xs='{"delay":0.3,"animation":"slide-right"}'>For six decades, Sparrow studios have been
-              creating a connection between an artist’s music &amp; their fans through spectacular sonic integrity.
+            <h4 class="mt-4 mb-2" data-zanim-xs='{"delay":0.2,"animation":"slide-right"}'>{{ project.title }}</h4>
+            <p data-zanim-xs='{"delay":0.3,"animation":"slide-right"}'>
+              {{ project.lead }}
             </p>
-            <div data-zanim-xs='{"delay":0.4,"animation":"slide-right"}'><a
-                class="btn btn-link ps-0 text-black fw-bold outline-none" href="#!">See the Studios</a></div>
+            <a class="btn btn-link ps-0" href="{% url 'project' project.slug %}">
+              read more
+              <span class="d-inline-block ms-1">&xrarr;</span>
+            </a>
           </div>
         </div>
-        <div class="col-md-6 col-lg mt-6 mt-md-0"><img class="rounded img-fluid" src="{% static 'img/studio-02.jpg' %}"
-            alt="" data-zanim-xs='{"delay":0.1,"animation":"zoom-in"}' data-zanim-trigger="scroll" />
-          <div class="overflow-hidden" data-zanim-timeline="{}" data-zanim-trigger="scroll">
-            <h4 class="mt-4 mb-2" data-zanim-xs='{"delay":0.2,"animation":"slide-right"}'>the experience</h4>
-            <p data-zanim-xs='{"delay":0.3,"animation":"slide-right"}'>Record release parties. Exclusive brand events.
-              Unforgettable unplugged performances. We’ve done it all—and we’d love to do it again.</p>
-            <div data-zanim-xs='{"delay":0.4,"animation":"slide-right"}'><a
-                class="btn btn-link ps-0 text-black fw-bold outline-none" href="#!">Build an Experience</a></div>
-          </div>
-        </div>
-        <div class="col-md-6 col-lg mt-6 mt-lg-0"><img class="rounded img-fluid" src="{% static 'img/studio-03.jpg' %}"
-            alt="" data-zanim-xs='{"delay":0.1,"animation":"zoom-in"}' data-zanim-trigger="scroll" />
-          <div class="overflow-hidden" data-zanim-timeline="{}" data-zanim-trigger="scroll">
-            <h4 class="mt-4 mb-2" data-zanim-xs='{"delay":0.2,"animation":"slide-right"}'>notable events</h4>
-            <p data-zanim-xs='{"delay":0.3,"animation":"slide-right"}'>Located within the world-famous Sparrow records
-              tower, Sparrow studios offers a premier venue for legendary events no one will forget.</p>
-            <div data-zanim-xs='{"delay":0.4,"animation":"slide-right"}'><a
-                class="btn btn-link ps-0 text-black fw-bold outline-none" href="#!">Learn more</a></div>
-          </div>
-        </div>
+        {% endfor %}
+
       </div>
     </div>
   </section>

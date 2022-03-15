@@ -23,12 +23,16 @@
 }
 
 /* forms */
-.blog-form-textarea {
+.form-textarea {
   padding-left: 0;
 }
 
-.blog-form-textarea > textarea {
+.form-textarea > textarea {
   height: 100vh;
+}
+
+.project-form textarea[name="main_image"] {
+  height: 10vh;
 }
 
 /* Pygments default style */

@@ -1,0 +1,33 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+<!-- Title -->
+{% block title %}
+Projects
+{% if project.title %}
+| {{ project.title }}
+{% else %}
+| New
+{% endif %}
+{% endblock title %}
+
+<!-- Main Content -->
+{% block content %}
+<main class="main min-vh-100" id="top">
+
+  <!-- Preloader -->
+  {% include "preloader.html" %}
+  <!-- End Preloader -->
+
+  <form method="post" class="p-6 project-form">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Save" class="btn btn-outline-success">
+  </form>
+
+  {{ form.media }}
+
+</main>
+{% endblock content %}
+<!-- End of Main Content -->
