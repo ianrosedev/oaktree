@@ -1,0 +1,63 @@
+{% extends "_base.html" %}
+
+<!-- Meta Description -->
+{% block meta_description %}Meta description{% endblock meta_description %}
+
+<!-- Title -->
+{% block title %}Not Found{% endblock title %}
+
+<!-- Main Content -->
+{% block content %}
+<main class="main min-vh-100" id="top">
+
+  <!-- Preloader -->
+  {% include "preloader.html" %}
+  <!-- End Preloader -->
+
+  <!-- Article Body -->
+  <section class="py-0">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 py-6">
+          <div class="row h-100 flex-center">
+            <div class="col-lg-6">
+              <h1 class="display-4 fs-2 fs-lg-3 fs-xl-4">
+                <span class="d-block overflow-hidden pb-1">
+                  <span class="d-inline-block" data-zanim-xs='{"delay":0.4}' data-zanim-trigger="scroll">
+                    Trying to get
+                  </span>
+                </span>
+                <span class="d-block overflow-hidden pb-1">
+                  <span class="d-inline-block" data-zanim-xs='{"delay":0.4}' data-zanim-trigger="scroll">
+                    where you want
+                  </span>
+                </span>
+                <span class="d-block overflow-hidden pb-1">
+                  <span class="d-inline-block" data-zanim-xs='{"delay":0.4}' data-zanim-trigger="scroll">
+                    to go?
+                  </span>
+                </span>
+              </h1>
+              <div class="overflow-hidden">
+                <p class="fs-1 mt-4" data-zanim-xs='{"delay":0.5}' data-zanim-trigger="scroll">
+                  Sorry, this page isn't it.
+                </p>
+              </div>
+              <div class="overflow-hidden">
+                <div data-zanim-xs='{"delay":0.6}' data-zanim-trigger="scroll">
+                  <a class="btn btn-outline-dark mt-6 mb-1" href="{% url 'home' %}">
+                    take me home
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- End Article Body -->
+
+</main>
+{% endblock content %}
+<!-- End Main Content -->
