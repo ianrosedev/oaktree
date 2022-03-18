@@ -16,10 +16,12 @@
   padding-right: 10px;
 }
 
-/* disable links */
-.disabled {
-  pointer-events: none;
-  cursor: default;
+/* disabled links */
+.disabled:hover {
+  cursor: not-allowed;
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #e1e1e1;
 }
 
 /* forms */
