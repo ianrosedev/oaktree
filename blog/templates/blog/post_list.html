@@ -52,11 +52,11 @@ Blog
           <!-- Post List -->
           {% for post in posts %}
           <div class="mb-6 mb-lg-8">
-            <p class="font-sans-serif text-500">{{ post.date_created|date }}</p>
+            <p class="font-sans-serif text-700">{{ post.date_created|date }}</p>
             <a class="text-black" href="{% url 'post' post.slug %}">
-              <h3>{{ post.title }}</h3>
+              <h2 class="h3">{{ post.title }}</h2>
             </a>
-            <h4 class="fw-normal text-700 mt-3">{{ post.body|format_markdown|truncatechars_html:200 }}</h4>
+            <h3 class="h4 fw-normal text-700 mt-3">{{ post.body|format_markdown|truncatechars_html:200 }}</h3>
             <a class="btn btn-link ps-0" href="{% url 'post' post.slug %}">
               read more
               <span class="d-inline-block ms-1">&xrarr;</span>
@@ -140,8 +140,9 @@ Blog
           </nav>
           <!-- End Pagination -->
 
+          <!-- If no posts found -->
           {% else %}
-          <h3>No results found for: {{ current_query }}</h3>
+          <h2 class="h3">No results found for: {{ current_query }}</h2>
           {% endif %}
           <!-- End Display if posts found -->
 
@@ -156,14 +157,14 @@ Blog
               <form class="input-iconic" action="{% url 'search_list' %}" method="get">
                 <input name="q" class="form-control" type="search" placeholder="Search..." />
                 <div class="input-icon">
-                  <button type="submit"><span class="fas fa-search text-500"></span></button>
+                  <button type="submit" aria-label="Search"><span class="fas fa-search text-700"></span></button>
                 </div>
               </form>
               <!-- End Search -->
 
               <!-- Tags -->
               <div class="mt-6">
-                <h4>Tags</h4>
+                <h2 class="h4">Tags</h2>
                 <ul class="nav mt-3">
                   {% if current_tag %}
                   <li>

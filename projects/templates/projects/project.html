@@ -37,8 +37,8 @@
               <div class="overflow-hidden">
                 <div data-zanim-xs='{"delay":0.1}'>
                   <a class="btn btn-link ps-0 text-black shadow-none" href="{% url 'home' %}#projects">
-                    <span class="fas fa-chevron-left" data-fa-transform="down-1"></span><span
-                      class="ps-2 fw-bold">Home</span>
+                    <span class="fas fa-chevron-left" aria-hidden="true" data-fa-transform="down-1"></span>
+                    <span class="ps-2 fw-bold">Home</span>
                   </a>
                 </div>
               </div>
@@ -54,7 +54,7 @@
               <div class="row mt-4">
                 <div class="col-xl-9">
                   <div class="overflow-hidden">
-                    <p class="lead font-sans-serif fw-normal text-600" data-zanim-xs='{"delay":0.3}'>
+                    <p class="lead font-sans-serif fw-normal text-700" data-zanim-xs='{"delay":0.3}'>
                       {{ project.lead }}
                     </p>
                   </div>
@@ -75,8 +75,9 @@
             <div class="row">
 
               <!-- Project Content -->
-              <div class="col-12 col-xl-8 pe-xl-6" data-zanim-timeline='{"delay":0.5}' data-zanim-trigger="scroll">
-                <div class="overflow-hidden" data-zanim-xs='{"delay":0.1}'>
+              <div class="project-content col-12 col-xl-8 pe-xl-6" data-zanim-timeline='{"delay":0.5}'
+                data-zanim-trigger="scroll">
+                <div class="text-700 overflow-hidden" data-zanim-xs='{"delay":0.1}'>
                   {{ project.body|format_markdown }}
                 </div>
               </div>
@@ -87,16 +88,16 @@
 
                 <!-- Project Link -->
                 <div class="overflow-hidden">
-                  <h6 class="text-uppercase ls" data-zanim-xs='{"delay":0.1}'>Project link</h6>
+                  <h2 class="h6 text-uppercase ls" data-zanim-xs='{"delay":0.1}'>Project link</h2>
                 </div>
                 <div class="overflow-hidden">
                   <div data-zanim-xs='{"delay":0.2}'>
                     {% if project.web_link %}
-                    <a class="text-600 font-sans-serif" href="{{ project.web_link }}">
+                    <a class="text-700 font-sans-serif" href="{{ project.web_link }}">
                       {{project.web_link }}
                     </a>
                     {% else %}
-                    <p class="text-600 font-sans-serif">None at this time</p>
+                    <p class="text-700 font-sans-serif">None at this time</p>
                     {% endif %}
                   </div>
                 </div>
@@ -104,17 +105,17 @@
 
                 <!-- GitHub Link -->
                 <div class="overflow-hidden">
-                  <h6 class="mt-4 text-uppercase ls" data-zanim-xs='{"delay":0.1}'>GitHub</h6>
+                  <h2 class="h6 mt-4 text-uppercase ls" data-zanim-xs='{"delay":0.1}'>GitHub</h2>
                 </div>
                 <div class="overflow-hidden">
                   <div data-zanim-xs='{"delay":0.2}'>
                     {% if project.github_link %}
                     <a class="btn btn-dark btn-sm me-2" href="{{ project.github_link }}"
                       aria-label="{{project.title}} GitHub">
-                      <span class="fab fa-github" data-fa-transform="grow-6"></span>
+                      <span class="fab fa-github" aria-hidden="true" data-fa-transform="grow-6"></span>
                     </a>
                     {% else %}
-                    <p class="text-600 font-sans-serif">None at this time</p>
+                    <p class="text-700 font-sans-serif">None at this time</p>
                     {% endif %}
                   </div>
                 </div>

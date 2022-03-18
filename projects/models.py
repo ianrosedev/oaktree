@@ -11,7 +11,9 @@ class Project(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, blank=False)
     lead = models.CharField(max_length=300, blank=False)
-    body = MarkdownxField(blank=False)
+    body = MarkdownxField(
+        blank=False, help_text="For accessibility use h2 tags for subheadings."
+    )
     web_link = models.CharField(max_length=100, blank=True)
     github_link = models.CharField(max_length=100, blank=True)
     main_image = MarkdownxField(blank=False)
