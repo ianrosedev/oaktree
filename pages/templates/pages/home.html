@@ -19,64 +19,58 @@
       <div class="row justify-content-center text-center">
         <div class="col-lg-9 col-xl-8">
           <h1 class="text-decoration-underline mb-3 fs-3 fs-sm-4">Ian Rose</h1>
-          <p class="lead text-700 fst-italic">When we say that hosting your event at sparrow studios is an
-            unforgettable moment for your company, brand or product, we mean it.
+          <p class="lead text-700 fst-italic">
+            Full stack developer with
+            <script>document.write(new Date().getFullYear() - 2014)</script>
+            years of experience. I love all aspects of programming from the shell to algos,
+            design patterns, and web frameworks.
           </p>
         </div>
       </div>
       <div class="row pt-6">
         <div class="col-md-6 col-lg mt-6 mt-md-0 pe-md-6">
           <img class="no-styling" src="{% static 'img/icons/icon-coding.svg' %}" alt="coding" height="70" />
-          <h2 class="h3 mt-4 mb-2">Content Opportunities</h2>
-          <p class="text-justify">A unique opportunity to pair your brand with ours. Branded content opportunities
-            with Sparrow studios offer your fans legendary experiences thorough candid performances, one-of-a-kind
-            content &amp; town hall events. Sparrow studios is a fully equipped video facility; we offer video
-            capabilities, live streaming &amp; webcasting for all our events.
+          <h2 class="h3 mt-4 mb-2">Front End</h2>
+          <p>
+            Amazing user experience is key, whether visually
+            or through an accessibility tool like JAWS. Using up to date practices,
+            I strive to make it the best possible.
           </p>
-          <h3 class="h4 mt-4">opportunities</h3>
+          <h3 class="h4 mt-4">Experience</h3>
           <ul class="bullet-inside ps-0 font-sans-serif">
-            <li>Sponsored Content</li>
-            <li>Interviews</li>
-            <li>Artist Performances</li>
-            <li>Showcases</li>
-            <li>1 Mic 1 Take</li>
-            <li>Top of the Tower</li>
-            <li>Town Halls</li>
+            <li>JavaScript</li>
+            <li>React</li>
+            <li>Bootstrap</li>
+            <li>HTML/CSS</li>
           </ul>
         </div>
         <div class="col-md-6 col-lg mt-6 mt-md-0 pe-md-6">
           <img class="no-styling" src="{% static 'img/icons/icon-startup.svg' %}" alt="rocket" height="70" />
-          <h2 class="h3 mt-4 mb-2">Experiential</h2>
-          <p class="text-justify">Events at Sparrow studios offer a truly unique, exclusive space with legendary
-            appeal. Providing premiere event spaces and amenities for hosting formal parties, VIP red carpet events or
-            artist showcases within the setting of the mid-century architecture of Sparrow studios. To hold an event
-            here is to become a part of our legacy.
+          <h2 class="h3 mt-4 mb-2">Back End</h2>
+          <p>
+            I love Django, Node, and a good API. I am willing and able to learn more languages or frameworks as
+            needed. I'm currently learning all things AWS.
           </p>
-          <h3 class="h4 mt-4">opportunities</h3>
+          <h3 class="h4 mt-4">Experience</h3>
           <ul class="bullet-inside ps-0 font-sans-serif">
-            <li>Product Launches</li>
-            <li>Press Events</li>
-            <li>Seminars &amp; Demos</li>
-            <li>Event Viewing Parties</li>
-            <li>Record Release Events</li>
-            <li>High-def Audio</li>
+            <li>Django</li>
+            <li>Node</li>
+            <li>Docker</li>
+            <li>AWS</li>
           </ul>
         </div>
         <div class="col-md-6 col-lg mt-6 mt-md-0 pe-md-6">
           <img class="no-styling" src="{% static 'img/icons/icon-teamwork.svg' %}" alt="teamwork" height="70" />
           <h2 class="h3 mt-4 mb-2">Teamwork</h2>
-          <p class="text-justify">We will collaborate with you in producing media-facing content, copy, interviews,
-            trade show appearances and advertising. We facilitate exclusive access to our studios and unique
-            experiences throughout the year to showcase your product to your current and potential clients in premier
-            spaces.
-          </p>
-          <h3 class="h4 mt-4">opportunities</h3>
+          <p>
+            Maintainable clean code, with other team members in mind, is something that I strive for.
+            I'm a fan of testing at all points of the development process.
+          <h3 class="h4 mt-4">Experience</h3>
           <ul class="bullet-inside ps-0 font-sans-serif">
-            <li>Strategy Pairing</li>
-            <li>Academy Awards</li>
-            <li>Contesting</li>
-            <li>Licensing</li>
-            <li>High-def Audio</li>
+            <li>Agile</li>
+            <li>Testing</li>
+            <li>Startup</li>
+            <li>Open Source</li>
           </ul>
         </div>
       </div>
@@ -102,7 +96,7 @@
             <p data-zanim-xs='{"delay":0.3,"animation":"slide-right"}'>
               {{ project.lead }}
             </p>
-            <a class="btn btn-link ps-0" href="{% url 'project' project.slug %}">
+            <a class="btn btn-link px-0" href="{% url 'project' project.slug %}">
               read more
               <span class="d-inline-block ms-1">&xrarr;</span>
             </a>
@@ -120,7 +114,11 @@
     <div class="container">
       <div class="row">
         <div class="col-12">
-          <h2 class="mb-7 text-decoration-underline">Blog Posts</h2>
+          <h2 class="text-decoration-underline">Latest Posts</h2>
+          <a class="btn btn-link mb-5 p-0" href="{% url 'post_list' %}">
+            All
+            <span class="d-inline-block ms-1">&xrarr;</span>
+          </a>
         </div>
 
         <!-- Post List -->
@@ -135,7 +133,7 @@
             </div>
           </div>
           <p>{{ post.body|format_markdown|truncatechars_html:200 }}</p>
-          <a class="btn btn-link ps-0" href="{% url 'post' post.slug %}">
+          <a class="btn btn-link px-0" href="{% url 'post' post.slug %}">
             read more
             <span class="d-inline-block ms-1">&xrarr;</span>
           </a>

@@ -2,6 +2,10 @@
 {% load static %}
 {% load format_markdown %}
 
+<!-- Meta Description -->
+{% block meta_description %}Latest posts from Ian Rose. Sharing my knowledge and learning of all things programming.
+{% endblock meta_description %}
+
 {% block title %}
 Blog
 {% if current_tag %}
@@ -24,8 +28,7 @@ Blog
     <div class="container">
       <div class="row align-items-end">
         <div class="col-lg-8 mb-6">
-          <h1 class="post-title text-white display-8 fs-3 fs-md-4" data-zanim-xs='{"delay":0.6}'
-            data-zanim-trigger="scroll">
+          <h1 class="text-white display-8 fs-3 fs-md-4 mt-4" data-zanim-xs='{"delay":0.6}' data-zanim-trigger="scroll">
             {% if current_tag %}
             {{ current_tag.name }}
             {% elif current_query %}
@@ -57,7 +60,7 @@ Blog
               <h2 class="h3">{{ post.title }}</h2>
             </a>
             <h3 class="h4 fw-normal text-700 mt-3">{{ post.body|format_markdown|truncatechars_html:200 }}</h3>
-            <a class="btn btn-link ps-0" href="{% url 'post' post.slug %}">
+            <a class="btn btn-link px-0" href="{% url 'post' post.slug %}">
               read more
               <span class="d-inline-block ms-1">&xrarr;</span>
             </a>
@@ -151,7 +154,7 @@ Blog
         <!-- Sidebar -->
         <div id="sidebar" class="col-lg-4 mt-0 mx-0 ps-xl-7">
           <div class="row px-2">
-            <div class="col">
+            <div class="col mx-0 mx-lg-1">
 
               <!-- Search -->
               <form class="input-iconic" action="{% url 'search_list' %}" method="get">
@@ -163,9 +166,9 @@ Blog
               <!-- End Search -->
 
               <!-- Tags -->
-              <div class="mt-6">
+              <div class="my-5 mt-lg-6">
                 <h2 class="h4">Tags</h2>
-                <ul class="nav mt-3">
+                <ul class="nav mt-lg-3">
                   {% if current_tag %}
                   <li>
                     <a class="btn btn-xs btn-outline-secondary m-1" href="{% url 'tag_list' current_tag.slug %}">
