@@ -193,7 +193,3 @@ Temporary Items
 
 # Built Visual Studio Code Extensions
 *.vsix
-
-### Static files for development ###
-/static/img
-/static/video
