@@ -24,6 +24,6 @@ urlpatterns = [
     path("projects/", include("projects.urls")),
     path("blog/", include("blog.urls")),
     path("markdownx/", include("markdownx.urls")),
-    path("admin/", admin.site.urls),
+    path("ianrosedevadmin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -10,8 +10,13 @@ WORKDIR /code
 
 # Install dependencies
 COPY requirements.txt /code/
-RUN pip install --upgrade pip &&\
-    pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
 
 # Copy Project
 COPY . /code/
+
+# Expose Django port 8000
+EXPOSE 8000
+
+# Serve Django with Gunicorn on port 8000 (1 worker)
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "1", "config.wsgi:application"]

@@ -12,26 +12,42 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
-from datetime import datetime
+import boto3
+
+# Current environment
+CURRENT_ENV = os.environ.get("CURRENT_ENV")
+
+
+# AWS
+ssm = boto3.client("ssm", region_name="us-east-1")
+env_prefix = "/website/prod/"
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+if CURRENT_ENV == "dev":
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+else:
+    SECRET_KEY = ssm.get_parameter(Name=env_prefix + "SECRET_KEY", WithDecryption=True)[
+        "Parameter"
+    ]["Value"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+if CURRENT_ENV == "dev":
+    DEBUG = True
+    ALLOWED_HOSTS = []
+else:
+    DEBUG = False
+    ALLOWED_HOSTS = ["ianrosedev.com", ".ianrosedev.com"]
+    CSRF_TRUSTED_ORIGINS = ["https://ianrosedev.com", "https://*.ianrosedev.com"]
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 
 
 # Application definition
-
 INSTALLED_APPS = [
     # Core
     "django.contrib.admin",
@@ -47,6 +63,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "debug_toolbar",
+    "storages",
     # Local
     "accounts.apps.AccountsConfig",
     "pages.apps.PagesConfig",
@@ -90,22 +107,40 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_NAME"),
-        "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": "db",
-        "PORT": 5432,
+if CURRENT_ENV == "dev":
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("POSTGRES_NAME"),
+            "USER": os.environ.get("POSTGRES_USER"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+            "HOST": os.environ.get("POSTGRES_HOST"),
+            "PORT": 5432,
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": ssm.get_parameter(
+                Name=env_prefix + "POSTGRES_NAME", WithDecryption=True
+            )["Parameter"]["Value"],
+            "USER": ssm.get_parameter(
+                Name=env_prefix + "POSTGRES_USER", WithDecryption=True
+            )["Parameter"]["Value"],
+            "PASSWORD": ssm.get_parameter(
+                Name=env_prefix + "POSTGRES_PASSWORD", WithDecryption=True
+            )["Parameter"]["Value"],
+            "HOST": ssm.get_parameter(
+                Name=env_prefix + "POSTGRES_HOST", WithDecryption=True
+            )["Parameter"]["Value"],
+            "PORT": 5432,
+        }
+    }
 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -124,61 +159,114 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
-
 LANGUAGE_CODE = "en-us"
-
-TIME_ZONE = "UTC"
-
+TIME_ZONE = "America/New_York"
 USE_I18N = True
-
 USE_TZ = True
+
+
+# django-markdownx
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+MARKDOWNX_MEDIA_PATH = "markdownx/"
+MARKDOWNX_IMAGE_MAX_SIZE = {"size": (500, 500), "quality": 100}
+MARKDOWNX_MARKDOWN_EXTENSIONS = ["fenced_code", "codehilite"]
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-
-STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+
+if CURRENT_ENV == "dev":
+    STATIC_URL = "static/"
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+else:
+    # AWS settings
+    AWS_S3_VERIFY = True
+    AWS_DEFAULT_ACL = None
+    AWS_ACCESS_KEY_ID = ssm.get_parameter(
+        Name=env_prefix + "S3_AWS_ACCESS_KEY_ID", WithDecryption=True
+    )["Parameter"]["Value"]
+    AWS_SECRET_ACCESS_KEY = ssm.get_parameter(
+        Name=env_prefix + "S3_AWS_SECRET_ACCESS_KEY", WithDecryption=True
+    )["Parameter"]["Value"]
+    AWS_STORAGE_BUCKET_NAME = ssm.get_parameter(
+        Name=env_prefix + "S3_AWS_STORAGE_BUCKET_NAME", WithDecryption=True
+    )["Parameter"]["Value"]
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=31536000"}
+
+    # S3 static settings
+    AWS_LOCATION = "static"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+    # django-markdownx
+    MARKDOWNX_MEDIA_PATH = "content/"
 
 # Media files
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+if CURRENT_ENV == "dev":
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    # S3 media settings
+    MEDIA_LOCATION = "media"
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+    DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 # Custom user model
 AUTH_USER_MODEL = "accounts.CustomUser"
 
+
 # Redirects for when login is reqiured
-LOGIN_URL = "/admin/login/"
+LOGIN_URL = "/ianrosedevadmin/login/"
 LOGIN_REDIRECT_URL = "/blog/"
 
-# E-mail
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.environ.get("EMAIL_HOST")
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_RECIPIENT_ADDRESS = os.environ.get("EMAIL_RECIPIENT_ADDRESS")
 
-# django-markdownx
-FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
-MARKDOWNX_MEDIA_PATH = datetime.now().strftime("markdownx/%Y/%m/%d")
-MARKDOWNX_IMAGE_MAX_SIZE = {"size": (500, 500), "quality": 100}
-MARKDOWNX_MARKDOWN_EXTENSIONS = ["fenced_code", "codehilite"]
+# Email
+if CURRENT_ENV == "dev":
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = os.environ.get("EMAIL_HOST")
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+    EMAIL_RECIPIENT_ADDRESS = os.environ.get("EMAIL_RECIPIENT_ADDRESS")
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_RECIPIENT_ADDRESS = (
+        ssm.get_parameter(
+            Name=env_prefix + "EMAIL_RECIPIENT_ADDRESS", WithDecryption=True
+        )
+    )["Parameter"]["Value"]
+    DEFAULT_FROM_EMAIL = (
+        ssm.get_parameter(
+            Name=env_prefix + "EMAIL_RECIPIENT_ADDRESS", WithDecryption=True
+        )
+    )["Parameter"]["Value"]
+    SERVER_EMAIL = (
+        ssm.get_parameter(
+            Name=env_prefix + "EMAIL_RECIPIENT_ADDRESS", WithDecryption=True
+        )
+    )["Parameter"]["Value"]
+    EMAIL_HOST = ssm.get_parameter(Name=env_prefix + "EMAIL_HOST", WithDecryption=True)[
+        "Parameter"
+    ]["Value"]
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = ssm.get_parameter(
+        Name=env_prefix + "EMAIL_HOST_USER", WithDecryption=True
+    )["Parameter"]["Value"]
+    EMAIL_HOST_PASSWORD = ssm.get_parameter(
+        Name=env_prefix + "EMAIL_HOST_PASSWORD", WithDecryption=True
+    )["Parameter"]["Value"]
+
 
 # django-crispy-forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-if DEBUG:
-    # django-debug-toolbar
-    import socket
-
-    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-    INTERNAL_IPS = [ip[:-1] + "1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]

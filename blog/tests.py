@@ -355,7 +355,7 @@ class PostCreateTests(TestCase):
         self.client.logout()
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/admin/login/?next=/blog/new/")
+        self.assertRedirects(response, "/ianrosedevadmin/login/?next=/blog/new/")
 
     def test_postcreate_for_logged_in_user(self):
         self.client.login(username="testuser", password="testpass123")
@@ -384,7 +384,7 @@ class PostUpdateTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response, f"/admin/login/?next=/blog/edit/{self.post.slug}/"
+            response, f"/ianrosedevadmin/login/?next=/blog/edit/{self.post.slug}/"
         )
 
     def test_postupdate_for_logged_in_user(self):
@@ -414,7 +414,7 @@ class PostDeleteTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response, f"/admin/login/?next=/blog/delete/{self.post.slug}/"
+            response, f"/ianrosedevadmin/login/?next=/blog/delete/{self.post.slug}/"
         )
 
     def test_postdelete_for_logged_in_user(self):

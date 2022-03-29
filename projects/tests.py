@@ -74,7 +74,7 @@ class ProjectCreateTests(TestCase):
         self.client.logout()
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/admin/login/?next=/projects/new/")
+        self.assertRedirects(response, "/ianrosedevadmin/login/?next=/projects/new/")
 
     def test_projectcreate_for_logged_in_user(self):
         self.client.login(username="testuser", password="testpass123")
@@ -106,7 +106,8 @@ class ProjectUpdateTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response, f"/admin/login/?next=/projects/edit/{self.project.slug}/"
+            response,
+            f"/ianrosedevadmin/login/?next=/projects/edit/{self.project.slug}/",
         )
 
     def test_projectupdate_for_logged_in_user(self):
@@ -137,7 +138,8 @@ class ProjectDeleteTests(TestCase):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(
-            response, f"/admin/login/?next=/projects/delete/{self.project.slug}/"
+            response,
+            f"/ianrosedevadmin/login/?next=/projects/delete/{self.project.slug}/",
         )
 
     def test_projectdelete_for_logged_in_user(self):
