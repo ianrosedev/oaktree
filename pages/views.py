@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
 from django.views import generic
+from django.contrib.messages.views import SuccessMessageMixin
 from projects.models import Project
 from blog.models import Post
 from .forms import ContactForm
@@ -20,10 +21,11 @@ class HomePageView(generic.TemplateView):
         return context
 
 
-class ContactPageView(generic.FormView):
+class ContactPageView(SuccessMessageMixin, generic.FormView):
     template_name = "pages/contact.html"
     form_class = ContactForm
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("contact")
+    success_message = "Message sent!"
 
     def form_valid(self, form):
         form.send_email()
