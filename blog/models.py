@@ -20,7 +20,9 @@ class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     title = models.CharField(max_length=255, blank=False)
-    body = MarkdownxField(blank=False)
+    body = MarkdownxField(
+        blank=False, help_text="For accessibility use h2 tags for subheadings."
+    )
     meta_description = models.CharField(max_length=150, blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_modified = models.DateTimeField(auto_now=True)

@@ -20,7 +20,7 @@ Blog
   {% include "preloader.html" %}
   <!-- End Preloader -->
 
-  <form method="post" class="p-6">
+  <form method="post" class="p-6 project-form">
     {% csrf_token %}
     {{ form|crispy }}
     <input type="submit" value="Save" class="btn btn-outline-success">
