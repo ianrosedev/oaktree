@@ -15,13 +15,18 @@
   border: 1px solid #e1e1e1;
 }
 
+/* User created content */
+.user-content h2 {
+  font-size: calc(1.2583rem + 0.0996vw);
+}
+
+.user-content h2:not(:first-child) {
+  margin-top: 2rem;
+}
+
 /* Forms */
 .form-textarea {
   padding-left: 0;
-}
-
-.project-content h2 {
-  font-size: 1rem;
 }
 
 .form-textarea > textarea {
