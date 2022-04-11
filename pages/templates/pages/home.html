@@ -87,7 +87,7 @@
         </div>
 
         {% for project in projects %}
-        <div class="col-md-6 col-lg">
+        <div class="col-md-6 col-lg mb-4">
           <a href="{% url 'project' project.slug %}">
             {{ project.main_image|format_markdown }}
           </a>
@@ -123,16 +123,16 @@
 
         <!-- Post List -->
         {% for post in posts %}
-        <div class="col-lg-6 pt-lg-0 pe-lg-6">
+        <div class="col-lg-6 pt-lg-0 pe-lg-6 mb-4">
           <p class="font-sans-serif text-700">{{ post.date_created|date }}</p>
-          <div class="d-flex align-items-center mb-4">
+          <div class="d-flex align-items-center">
             <div class="flex-1">
               <a class="text-black" href="{% url 'post' post.slug %}">
-                <h3>{{ post.title }}</h3>
+                <h3 class="h4 mb-2">{{ post.title }}</h3>
               </a>
             </div>
           </div>
-          <p>{{ post.body|format_markdown|truncatechars_html:200 }}</p>
+          {{ post.body|format_markdown|truncatechars_html:200 }}
           <a class="btn btn-link px-0" href="{% url 'post' post.slug %}">
             read more
             <span class="d-inline-block ms-1">&xrarr;</span>
